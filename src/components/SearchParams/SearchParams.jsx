@@ -13,7 +13,7 @@ export const SearchParams = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [breeds, isBreedsLoading] = useBreedList(animal);
 
-  const onFormSubmitHanlder = async () => {
+  const requestPets = async () => {
     setIsLoading(true);
     getPets(animal, location, breed)
       .then(({ pets }) => {
@@ -29,7 +29,7 @@ export const SearchParams = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onFormSubmitHanlder();
+          requestPets();
         }}
       >
         <label htmlFor="location">
