@@ -1,38 +1,8 @@
-import { useState, useEffect } from "react";
-
-const cache = new Map();
+import { useQuery } from "@tanstack/react-query";
+import { getBreedList } from "../api/getBreedList";
 
 export const useBreedList = (animal) => {
-  const [breeds, setBreeds] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data, isLoading } = useQuery(["breeds", animal], getBreedList);
 
-  useEffect(() => {
-    if (!animal) setBreeds([]);
-    else if (cache.has(animal)) setBreeds(cache.get(animal));
-    else {
-      getBreeds(animal);
-    }
-
-    async function getBreeds(animal) {
-      setIsLoading(true);
-
-      const response = await fetch(
-        `http://pets-v2.dev-apis.com/breeds?animal=${animal}`
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `An error has been occured trying to fetch breeds. Message: ${response}`
-        );
-      }
-
-      const { breeds } = await response.json();
-
-      cache.set(animal, breeds);
-      setBreeds(breeds);
-      setIsLoading(false);
-    }
-  }, [animal]);
-
-  return [breeds, isLoading];
+  return [data?.breeds ?? [], isLoading];
 };
